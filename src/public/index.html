@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyFlow - Organize seus Objetivos de Estudos</title>
+  <meta name="description" content="Aplicação simples e acolhedora para organizar objetivos de estudo." />
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Barra Superior / Cabeçalho -->
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+            <path d="M6 6h10"></path>
+            <path d="M6 10h10"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">Study<span>Flow</span></h1>
+            <span class="badge-tag">Iniciantes</span>
+          </div>
+          <p class="brand-subtitle">Organize o que você deseja aprender, passo a passo</p>
+        </div>
+      </div>
+
+      <button id="btn-open-new-modal" class="btn btn-primary" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Novo Objetivo</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container">
+
+    <!-- Painel de Visão Geral e Métricas -->
+    <section class="stats-panel">
+      <div class="stats-header">
+        <div>
+          <h2 class="stats-title">Visão Geral dos Estudos</h2>
+          <p class="stats-subtitle">Acompanhe seu progresso e filtre com um clique</p>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Progresso Geral</span>
+            <strong id="progress-percent">0%</strong>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card active" data-filter="all" id="stat-card-all">
+          <div class="stat-icon stat-icon-all">📋</div>
+          <div class="stat-info">
+            <span class="stat-label">Total</span>
+            <strong class="stat-value" id="count-total">0</strong>
+          </div>
+        </div>
+
+        <div class="stat-card" data-filter="not_started" id="stat-card-not-started">
+          <div class="stat-icon stat-icon-pending">⏳</div>
+          <div class="stat-info">
+            <span class="stat-label">Não Iniciados</span>
+            <strong class="stat-value" id="count-not-started">0</strong>
+          </div>
+        </div>
+
+        <div class="stat-card" data-filter="in_progress" id="stat-card-in-progress">
+          <div class="stat-icon stat-icon-progress">🚀</div>
+          <div class="stat-info">
+            <span class="stat-label">Em Andamento</span>
+            <strong class="stat-value" id="count-in-progress">0</strong>
+          </div>
+        </div>
+
+        <div class="stat-card" data-filter="completed" id="stat-card-completed">
+          <div class="stat-icon stat-icon-completed">✅</div>
+          <div class="stat-info">
+            <span class="stat-label">Concluídos</span>
+            <strong class="stat-value" id="count-completed">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de Filtro e Busca -->
+    <section class="filter-bar">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="input-search" placeholder="Buscar objetivo por título ou descrição..." />
+        <button type="button" id="btn-clear-search" class="btn-clear hidden">&times;</button>
+      </div>
+
+      <div class="filter-controls">
+        <select id="select-status-filter" aria-label="Filtrar por status">
+          <option value="all">Todos os Status</option>
+          <option value="not_started">⏳ Não Iniciados</option>
+          <option value="in_progress">🚀 Em Andamento</option>
+          <option value="completed">✅ Concluídos</option>
+        </select>
+
+        <select id="select-sort" aria-label="Ordenar objetivos">
+          <option value="deadline_asc">Prazo: Mais próximo primeiro</option>
+          <option value="deadline_desc">Prazo: Mais distante primeiro</option>
+          <option value="created_desc">Mais recentes adicionados</option>
+          <option value="title_asc">Ordem alfabética (A-Z)</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Cabeçalho da Listagem -->
+    <div class="list-summary" id="list-summary">
+      <span id="summary-count-text">Mostrando objetivos</span>
+      <button type="button" id="btn-reset-filters" class="link-btn hidden">Limpar filtros</button>
+    </div>
+
+    <!-- Lista de Cartões de Objetivos -->
+    <div id="objectives-grid" class="objectives-grid"></div>
+
+    <!-- Estado Vazio (Empty State) -->
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-icon">📖</div>
+      <h3 id="empty-title">Nenhum objetivo cadastrado ainda</h3>
+      <p id="empty-description">Todo aprendizado começa com uma meta simples. Cadastre o que você quer aprender agora mesmo!</p>
+      <div class="empty-actions">
+        <button id="btn-empty-new" type="button" class="btn btn-primary">Cadastrar Primeiro Objetivo</button>
+        <button id="btn-load-samples" type="button" class="btn btn-secondary">Carregar Exemplos Sugeridos</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p><strong>StudyFlow</strong> — Seu organizador de estudos para iniciantes.</p>
+      <p class="footer-sub">Seus dados ficam salvos automaticamente no seu navegador via LocalStorage.</p>
+    </div>
+  </footer>
+
+  <!-- Modal de Cadastro / Edição -->
+  <div id="modal-form" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-form-title">Novo Objetivo de Estudo</h3>
+          <p id="modal-form-subtitle">Defina o que você quer aprender com clareza.</p>
+        </div>
+        <button type="button" class="btn-close" id="btn-close-form">&times;</button>
+      </div>
+
+      <form id="objective-form">
+        <input type="hidden" id="form-objective-id" />
+
+        <div class="form-group">
+          <label for="form-title">Título do objetivo <span class="required">*</span></label>
+          <input type="text" id="form-title" placeholder="Ex: Aprender funções em JavaScript" required />
+          <span class="field-hint">Dica: seja específico para saber quando completou.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="form-description">Descrição ou anotações <small>(opcional)</small></label>
+          <textarea id="form-description" rows="3" placeholder="Ex: Assistir aulas, ler documentação e resolver 3 exercícios."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-deadline">Prazo de conclusão <span class="required">*</span></label>
+            <input type="date" id="form-deadline" required />
+          </div>
+
+          <div class="form-group">
+            <label for="form-status">Status atual</label>
+            <select id="form-status">
+              <option value="not_started">⏳ Não Iniciado</option>
+              <option value="in_progress">🚀 Em Andamento</option>
+              <option value="completed">✅ Concluído</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-form">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-form">Salvar Objetivo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão (Requisito: Excluir somente após confirmação) -->
+  <div id="modal-delete" class="modal-overlay hidden" role="alertdialog" aria-modal="true">
+    <div class="modal-card modal-delete-card">
+      <div class="delete-icon-wrap">⚠️</div>
+      <div class="delete-content">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza de que deseja excluir o seguinte objetivo de estudo?</p>
+        <div id="delete-target-title" class="delete-target-title">"Título do objetivo"</div>
+        <p class="delete-warning">Esta ação removerá permanentemente o item e não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer delete-footer">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-delete">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btn-confirm-delete">Sim, Excluir Objetivo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificação Flutuante (Toast) -->
+  <div id="toast" class="toast hidden">
+    <span id="toast-message">Notificação</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+/**
+ * StudyFlow - Arquivo de Estilos (style.css)
+ * 
+ * Este arquivo importa as configurações globais de estilo do StudyFlow.
+ * No ambiente Vite/React, a folha de estilos principal é processada a partir de ./index.css
+ */
+
+@import "./index.css";
